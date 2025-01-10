@@ -7,9 +7,9 @@ from uuid6 import uuid7
 
 from app.infrastructure.database import Base
 
-
 if TYPE_CHECKING:
     from app.auth.infrastructure.models.session import AuthSession
+    from app.user.infrastructure.models.work_profile import WorkProfile
 
 
 @final
@@ -25,3 +25,4 @@ class User(Base):
     second_name: Mapped[str | None] = mapped_column()
 
     auth_sessions: Mapped[list["AuthSession"]] = relationship(back_populates="user")
+    work_profile: Mapped["WorkProfile"] = relationship(back_populates="user")
