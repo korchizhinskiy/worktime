@@ -50,7 +50,7 @@ class CommonSettings(BaseModel):
 
 
 class Settings(BaseSettings):
-    # certs: CryptoSettings # Using only for JWT or another auth with certs (or another cases)
+    certs: CryptoSettings
     db_connection: DatabaseConnectionSettings
     common: CommonSettings
     model_config = SettingsConfigDict(env_file=(".env",), env_nested_delimiter="__", str_to_lower=True)

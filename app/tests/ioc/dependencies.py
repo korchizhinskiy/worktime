@@ -10,9 +10,6 @@ from app.tests.ioc.providers import (
     AuthRepositoryProvider,
     AuthServiceProvider,
     SQLAlchemyProvider,
-    TrainingInteractorProvider,
-    TrainingQueryProvider,
-    TrainingRepositoryProvider,
     UserQueryProvider,
 )
 
@@ -34,9 +31,6 @@ def init_di(app: FastAPI) -> None:
         AuthInteractorProvider(),
         AuthServiceProvider(),
         UserQueryProvider(),
-        TrainingQueryProvider(),
-        TrainingRepositoryProvider(),
-        TrainingInteractorProvider(),
         context={Settings: MockSettings()},  # type: ignore [reportCallIssue]
     )
     setup_dishka(container, app)

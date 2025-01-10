@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.expression import insert
 
 from app.auth.application.services.security import hash_password
-from app.auth.infrastructure.models.user import User
+from app.user.infrastructure.models.user import User
 
 
 @pytest.mark.xfail(reason="Return password in response.")

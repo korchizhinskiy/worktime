@@ -4,11 +4,9 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from app.auth.infrastructure.models.base import Base as AuthBase
 from app.infrastructure.config import Settings
-from app.infrastructure.database import get_connection_url
+from app.infrastructure.database import Base, get_connection_url
 from app.tests.ioc.dependencies import MockSettings
-from app.training.infrastructure.models.base import Base as TrainingBase
 
 config = context.config
 # TODO: Temporary decision.
@@ -18,7 +16,7 @@ config.set_main_option("sqlalchemy.url", f"{get_connection_url(settings)}?async_
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = [AuthBase.metadata, TrainingBase.metadata]
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:

@@ -2,9 +2,9 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql import select
 
 from app.auth.application.dto.user import UserDTO
-from app.auth.infrastructure.models.user import User
 from app.user.application.dto.user_profile import UserProfileDTO
 from app.user.application.interfaces.query.user_profile import IUserProfileQuery
+from app.user.infrastructure.models.user import User
 
 
 class UserProfileQuery(IUserProfileQuery):
