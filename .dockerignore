@@ -1,0 +1,11 @@
+.dockerignore
+.env
+certs
+.venv
+.ruff_cache
+.git
+.gitignore
+postgres_data
+docker-compose.yaml
+Dockerfile
+README.md
