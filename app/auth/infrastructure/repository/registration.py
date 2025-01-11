@@ -8,6 +8,10 @@ from sqlalchemy.sql import select
 from app.auth.application.dto.registration import UserRegistrationDTO
 from app.auth.application.dto.user import UserDTO
 from app.auth.application.interfaces.repository.registration import IRegistrationRepository
+from app.user.application.enums.roles import Role
+from app.user.infrastructure.models.administrator_profile import AdministratorProfile
+from app.user.infrastructure.models.assistant_manager_profile import AssistantManagerProfile
+from app.user.infrastructure.models.manager_profile import ManagerProfile
 from app.user.infrastructure.models.user import User
 from app.user.infrastructure.models.work_profile import WorkProfile
 
@@ -30,9 +34,18 @@ class RegistrationRepository(IRegistrationRepository):
 
         return UserDTO.model_validate(user)
 
+    @override
     async def create(self, user_dto: UserRegistrationDTO) -> None:
-        user = User(**user_dto.model_dump())
-        work_profile = WorkProfile(user=user)
+        user = User(**user_dto.model_dump(exclude={"profile"}))
+        match user_dto.profile.role:
+            case Role.EMPLOYEE:
+                profile = WorkProfile(user=user, specialization=user_dto.profile.specialization)
+            case Role.MANAGER:
+                profile = ManagerProfile(user=user)
+            case Role.ASSISTANT_MANAGER:
+                profile = AssistantManagerProfile(user=user)
+            case Role.ADMINISTRATOR:
+                profile = AdministratorProfile(user=user)
         self.session.add(user)
-        self.session.add(work_profile)
+        self.session.add(profile)
         await self.session.commit()

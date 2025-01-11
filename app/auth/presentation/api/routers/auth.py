@@ -74,7 +74,6 @@ async def registration(
     ],
     interactor: FromDishka[UserRegistrationUseCase],
 ) -> UserRegistrationInputSchema:
-    print(user_data)
     await interactor.execute(
         UserRegistrationDTO(
             username=user_data.username,
@@ -82,7 +81,7 @@ async def registration(
             first_name=user_data.first_name,
             last_name=user_data.last_name,
             second_name=user_data.second_name,
-            # profile=Profile(role=user_data.profile.role,info=)
+            profile=user_data.profile.model_dump(),
         ),
     )
     return user_data
@@ -91,7 +90,7 @@ async def registration(
 @router.post("/login")
 @inject
 async def login(
-    user_data: UserLoginInputSchema | UserRegistrationInputSchema,
+    user_data: UserLoginInputSchema,
     interactor: FromDishka[UserLoginUseCase],
 ) -> TokenDTO:
     return await interactor.execute(

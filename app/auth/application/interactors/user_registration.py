@@ -1,9 +1,16 @@
 from typing import final
 
+from app.auth.application.dto.profile import (
+    AdministratorProfileDTO,
+    AssistantManagerProfileDTO,
+    ManagerProfileDTO,
+    WorkProfileDTO,
+)
 from app.auth.application.dto.registration import UserRegistrationDTO, UserRegistrationHashedDTO
 from app.auth.application.exceptions.user import UserAlreadyRegisteredError
 from app.auth.application.interfaces.repository.registration import IRegistrationRepository
 from app.auth.application.services.security import hash_password
+from app.user.application.enums.roles import Role
 
 
 @final
@@ -19,6 +26,19 @@ class UserRegistrationInteractor:
 
         hashed_password = hash_password(bytes(user_dto.password, encoding="utf-8"))
 
+        match user_dto.profile.role:
+            case Role.EMPLOYEE:
+                profile = WorkProfileDTO(
+                    role=user_dto.profile.role,
+                    specialization=user_dto.profile.specialization,
+                )
+            case Role.MANAGER:
+                profile = ManagerProfileDTO(role=user_dto.profile.role)
+            case Role.ASSISTANT_MANAGER:
+                profile = AssistantManagerProfileDTO(role=user_dto.profile.role)
+            case Role.ADMINISTRATOR:
+                profile = AdministratorProfileDTO(role=user_dto.profile.role)
+
         await self.repository.create(
             UserRegistrationHashedDTO(
                 username=user_dto.username,
@@ -26,5 +46,6 @@ class UserRegistrationInteractor:
                 last_name=user_dto.last_name,
                 second_name=user_dto.second_name,
                 password=hashed_password,
+                profile=profile,
             ),
         )

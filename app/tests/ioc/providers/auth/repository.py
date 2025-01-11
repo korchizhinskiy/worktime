@@ -5,7 +5,7 @@ from dishka.provider import Provider
 from app.auth.application.interfaces.repository.login import ILoginRepository
 from app.auth.application.interfaces.repository.registration import IRegistrationRepository
 from app.auth.infrastructure.repository.login import LoginRepository
-from app.auth.infrastructure.repository.user import RegistrationRepository
+from app.auth.infrastructure.repository.registration import RegistrationRepository
 
 
 class RepositoryProvider(Provider):
