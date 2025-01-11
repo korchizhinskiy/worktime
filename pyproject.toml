@@ -168,7 +168,7 @@ parametrize-values-type = "tuple"
 [tool.ruff.format]
 preview = true
 
-[tool.basedpyright]
+[tool.pyright]
 venv = ".venv"
 venvPath = "."
 include = [

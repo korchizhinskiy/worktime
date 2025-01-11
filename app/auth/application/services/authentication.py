@@ -20,8 +20,8 @@ class JWTService:
         sid = jwt.encode(
             payload={
                 "sub": str(user_dto.id),
-                "exp": time.time() + 1000,
-                "crt": time.time(),
+                # "exp": time.time() + 1000,
+                # "crt": time.time(),
                 # TODO: Add logic for change roles in system.
                 "role": str(user_dto.role),
             },
@@ -42,8 +42,8 @@ class JWTService:
         sid = jwt.encode(
             payload={
                 "sub": str(user_dto.id),
-                "exp": time.time() + 1000,
-                "crt": time.time(),
+                # "exp": time.time() + 1000,
+                # "crt": time.time(),
                 # TODO: Add logic for change roles in system.
                 "role": str(Role.EMPLOYEE),
             },
