@@ -28,7 +28,7 @@ class AuthUserDTO(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-
+# TODO: Add current user role into dto (from JWT)
 @inject
 async def get_authenticated_user(
     token: Annotated[HTTPAuthorizationCredentials, Depends(auth_scheme)],

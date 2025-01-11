@@ -9,6 +9,9 @@ from app.infrastructure.database import Base
 
 if TYPE_CHECKING:
     from app.auth.infrastructure.models.session import AuthSession
+    from app.user.infrastructure.models.administrator_profile import AdministratorProfile
+    from app.user.infrastructure.models.assistant_manager_profile import AssistantManagerProfile
+    from app.user.infrastructure.models.manager_profile import ManagerProfile
     from app.user.infrastructure.models.work_profile import WorkProfile
 
 
@@ -26,3 +29,6 @@ class User(Base):
 
     auth_sessions: Mapped[list["AuthSession"]] = relationship(back_populates="user")
     work_profile: Mapped["WorkProfile"] = relationship(back_populates="user")
+    manager_profile: Mapped["ManagerProfile"] = relationship(back_populates="user")
+    assistant_manager_profile: Mapped["AssistantManagerProfile"] = relationship(back_populates="user")
+    administrator_profile: Mapped["AdministratorProfile"] = relationship(back_populates="user")
