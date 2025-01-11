@@ -5,9 +5,8 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm.strategy_options import joinedload
 from sqlalchemy.sql import select
 
-from app.auth.application.dto.registration import UserRegistrationDTO
 from app.auth.application.dto.user import UserDTO
-from app.auth.application.interfaces.repository.user import IUserRepository
+from app.auth.application.interfaces.repository.login import ILoginRepository
 from app.user.infrastructure.models.user import User
 
 type HashPassword = bytes
@@ -15,7 +14,7 @@ type UserId = UUID
 type UserUsername = str
 
 
-class UserRepository(IUserRepository):
+class LoginRepository(ILoginRepository):
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
@@ -28,8 +27,3 @@ class UserRepository(IUserRepository):
             return None
 
         return UserDTO.model_validate(user)
-
-    async def create(self, user_dto: UserRegistrationDTO) -> None:
-        user = User(**user_dto.model_dump())
-        self.session.add(user)
-        await self.session.commit()

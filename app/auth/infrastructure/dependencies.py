@@ -12,6 +12,7 @@ from sqlalchemy.sql.expression import select
 
 from app.auth.infrastructure.exceptions import InvalidAuthenticationTokenError
 from app.auth.infrastructure.models.session import AuthSession
+from app.user.application.enums.roles import Role
 
 auth_scheme = HTTPBearer()
 
@@ -23,6 +24,7 @@ class AuthUserDTO(BaseModel):
     first_name: str
     last_name: str
     second_name: str
+    role: Role = Role.ADMINISTRATOR
 
     model_config = ConfigDict(from_attributes=True)
 

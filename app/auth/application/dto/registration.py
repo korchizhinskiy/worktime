@@ -3,7 +3,7 @@ from pydantic.main import BaseModel
 
 class UserRegistrationDTO(BaseModel):
     username: str
-    password: bytes
+    password: str
 
     first_name: str
     last_name: str
