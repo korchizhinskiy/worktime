@@ -8,3 +8,12 @@ class UserRegistrationDTO(BaseModel):
     first_name: str
     last_name: str
     second_name: str
+
+
+class UserRegistrationHashedDTO(BaseModel):
+    username: str
+    password: bytes
+
+    first_name: str
+    last_name: str
+    second_name: str

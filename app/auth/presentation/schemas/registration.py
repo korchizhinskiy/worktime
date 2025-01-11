@@ -1,5 +1,12 @@
-from pydantic.config import ConfigDict
+from pydantic import Field
 from pydantic.main import BaseModel
+
+from app.auth.presentation.schemas.profile import (
+    AdministratorProfileInputSchema,
+    AssistantManagerProfileInputSchema,
+    ManagerProfileInputSchema,
+    WorkProfileInputSchema,
+)
 
 
 class UserRegistrationInputSchema(BaseModel):
@@ -8,20 +15,12 @@ class UserRegistrationInputSchema(BaseModel):
     first_name: str
     last_name: str
     second_name: str
-
-    model_config: ConfigDict = ConfigDict(
-        json_schema_extra={
-            "examples": [
-                {
-                    "username": "dev.kor",
-                    "password": "123",
-                    "first_name": "Nazar",
-                    "last_name": "Korchizhinskiy",
-                    "second_name": "Alexandrovich",
-                },
-            ],
-        },
-    )
+    profile: (
+        WorkProfileInputSchema
+        | ManagerProfileInputSchema
+        | AssistantManagerProfileInputSchema
+        | AdministratorProfileInputSchema
+    ) = Field(..., discriminator="role")
 
 
 class UserRegistrationOutputSchema(BaseModel):

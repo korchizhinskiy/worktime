@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class Specialization(Enum):
-    BACKEND = "Backend"
-    FRONTEND = "Frontend"
+    BACKEND = "BACKEND"
+    FRONTEND = "FRONTEND"
     QA = "QA"
-    DESIGNER = "Designer"
+    DESIGNER = "DESIGNER"
