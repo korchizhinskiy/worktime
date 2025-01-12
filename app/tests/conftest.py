@@ -4,7 +4,7 @@ import pytest
 import pytest_asyncio
 from alembic.command import downgrade, upgrade
 from alembic.config import Config
-from dishka.async_container import AsyncContainer, make_async_container
+from dishka.async_container import make_async_container
 from dishka.integrations.fastapi import setup_dishka
 from fastapi.applications import FastAPI
 from httpx import ASGITransport, AsyncClient
@@ -23,15 +23,9 @@ from app.tests.ioc.providers import (
     AuthRepositoryProvider,
     AuthServiceProvider,
     SQLAlchemyProvider,
-    TrainingInteractorProvider,
-    TrainingQueryProvider,
-    TrainingRepositoryProvider,
     UserQueryProvider,
 )
-from app.training.presentation.api.routers import router as training_router
 from app.user.presentation.api.routers.user_profile import router as user_router
-
-pytest_plugins = ("app.tests.training.plugins.exercise",)
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -94,16 +88,13 @@ async def client(
         AuthInteractorProvider(),
         AuthServiceProvider(),
         UserQueryProvider(),
-        TrainingQueryProvider(),
-        TrainingRepositoryProvider(),
-        TrainingInteractorProvider(),
+        # This session only for tests. These session client can manage (transaction begin/rollback).
         context={Settings: MockSettings(), AsyncSession: session},  # type: ignore [reportCallIssue]
     )
     app = FastAPI(swagger_ui_parameters={"persistAuthorization": True})
 
     app.include_router(auth_router)
     app.include_router(user_router)
-    app.include_router(training_router)
     setup_exception_handlers(app)
     setup_dishka(container, app)
     configure_logging()

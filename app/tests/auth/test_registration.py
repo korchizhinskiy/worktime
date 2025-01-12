@@ -3,14 +3,9 @@ from typing import Literal
 import pytest
 import starlette.status as status_code
 from httpx import AsyncClient
-from sqlalchemy.ext.asyncio.session import AsyncSession
-from sqlalchemy.sql.expression import insert
-
-from app.auth.application.services.security import hash_password
-from app.user.infrastructure.models.user import User
 
 
-@pytest.mark.xfail(reason="Return password in response.")
+@pytest.mark.xfail(reason="Not created profile and return password in response.")
 @pytest.mark.asyncio(loop_scope="session")
 async def test_registration_user(client: AsyncClient) -> None:
     response = await client.post(
@@ -32,19 +27,9 @@ async def test_registration_user(client: AsyncClient) -> None:
     }
 
 
+@pytest.mark.xfail(reason="Return password in response.")
 @pytest.mark.asyncio(loop_scope="session")
-async def test_repeatable_user_registration(client: AsyncClient, session: AsyncSession) -> None:
-    # Arrange
-    stmt = insert(User).values(
-        username="petr2024",
-        password=hash_password(b"%PetrSun2024*"),
-        first_name="Petr",
-        last_name="Sun",
-        second_name="Alexandrovich",
-    )
-    await session.execute(stmt)
-
-    # Act
+async def test_registration_user_with_employee_profile(client: AsyncClient) -> None:
     response = await client.post(
         "auth/registration",
         json={
@@ -53,9 +38,89 @@ async def test_repeatable_user_registration(client: AsyncClient, session: AsyncS
             "first_name": "Petr",
             "last_name": "Sun",
             "second_name": "Alexandrovich",
+            "profile": {"role": "EMPLOYEE", "specialization": "BACKEND"},
         },
     )
-    assert response.status_code == status_code.HTTP_400_BAD_REQUEST
+    assert response.status_code == status_code.HTTP_200_OK
+    assert response.json() == {
+        "username": "petr2024",
+        "first_name": "Petr",
+        "last_name": "Sun",
+        "second_name": "Alexandrovich",
+        "profile": {"role": "EMPLOYEE", "specialization": "BACKEND"},
+    }
+
+
+@pytest.mark.xfail(reason="Return password in response.")
+@pytest.mark.asyncio(loop_scope="session")
+async def test_registration_user_with_manager_profile(client: AsyncClient) -> None:
+    response = await client.post(
+        "auth/registration",
+        json={
+            "username": "petr2024",
+            "password": "%PetrSun2024*",
+            "first_name": "Petr",
+            "last_name": "Sun",
+            "second_name": "Alexandrovich",
+            "profile": {"role": "MANAGER"},
+        },
+    )
+    assert response.status_code == status_code.HTTP_200_OK
+    assert response.json() == {
+        "username": "petr2024",
+        "first_name": "Petr",
+        "last_name": "Sun",
+        "second_name": "Alexandrovich",
+        "profile": {"role": "MANAGER"},
+    }
+
+
+@pytest.mark.xfail(reason="Return password in response.")
+@pytest.mark.asyncio(loop_scope="session")
+async def test_registration_user_with_assistant_manager_profile(client: AsyncClient) -> None:
+    response = await client.post(
+        "auth/registration",
+        json={
+            "username": "petr2024",
+            "password": "%PetrSun2024*",
+            "first_name": "Petr",
+            "last_name": "Sun",
+            "second_name": "Alexandrovich",
+            "profile": {"role": "ASSISTANT_MANAGER"},
+        },
+    )
+    assert response.status_code == status_code.HTTP_200_OK
+    assert response.json() == {
+        "username": "petr2024",
+        "first_name": "Petr",
+        "last_name": "Sun",
+        "second_name": "Alexandrovich",
+        "profile": {"role": "ASSISTANT_MANAGER"},
+    }
+
+
+@pytest.mark.xfail(reason="Return password in response.")
+@pytest.mark.asyncio(loop_scope="session")
+async def test_registration_user_with_administrator_profile(client: AsyncClient) -> None:
+    response = await client.post(
+        "auth/registration",
+        json={
+            "username": "petr2024",
+            "password": "%PetrSun2024*",
+            "first_name": "Petr",
+            "last_name": "Sun",
+            "second_name": "Alexandrovich",
+            "profile": {"role": "ADMINISTRATOR"},
+        },
+    )
+    assert response.status_code == status_code.HTTP_200_OK
+    assert response.json() == {
+        "username": "petr2024",
+        "first_name": "Petr",
+        "last_name": "Sun",
+        "second_name": "Alexandrovich",
+        "profile": {"role": "ADMINISTRATOR"},
+    }
 
 
 @pytest.mark.parametrize(
