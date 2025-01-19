@@ -2,6 +2,12 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm.strategy_options import joinedload
 from sqlalchemy.sql import select
 
+from app.auth.application.dto.profile import (
+    AdministratorProfileDTO,
+    AssistantManagerProfileDTO,
+    ManagerProfileDTO,
+    WorkProfileDTO,
+)
 from app.auth.application.exceptions.user import UserNotFoundError
 from app.infrastructure.schemas.auth_user import AuthorizedUserDTO
 from app.user.application.dto.user_profile import UserProfileDTO
@@ -46,4 +52,20 @@ class UserProfileQuery(IUserProfileQuery):
             last_name=user.last_name,
             second_name=user.second_name,
             role=idp.role,
+            profile=self.get_profile_data(user, idp),
         )
+
+    @staticmethod
+    def get_profile_data(
+        user: User,
+        idp: AuthorizedUserDTO,
+    ) -> WorkProfileDTO | ManagerProfileDTO | AssistantManagerProfileDTO | AdministratorProfileDTO:
+        match idp.role:
+            case Role.EMPLOYEE:
+                return WorkProfileDTO(role=idp.role, specialization=user.work_profile.specialization)
+            case Role.MANAGER:
+                return ManagerProfileDTO(role=idp.role)
+            case Role.ASSISTANT_MANAGER:
+                return AssistantManagerProfileDTO(role=idp.role)
+            case Role.ADMINISTRATOR:
+                return AdministratorProfileDTO(role=idp.role)
