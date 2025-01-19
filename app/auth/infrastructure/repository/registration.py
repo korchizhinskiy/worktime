@@ -36,6 +36,7 @@ class RegistrationRepository(IRegistrationRepository):
 
     @override
     async def create(self, user_dto: UserRegistrationDTO) -> None:
+        # TODO: Explicitly list attributes on creation User object.
         user = User(**user_dto.model_dump(exclude={"profile"}))
         match user_dto.profile.role:
             case Role.EMPLOYEE:

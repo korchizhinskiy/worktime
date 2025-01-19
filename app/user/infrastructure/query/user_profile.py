@@ -11,7 +11,11 @@ from app.user.infrastructure.models.user import User
 
 
 class UserProfileQuery(IUserProfileQuery):
-    # TODO: Add role into output
+    """
+    Get user's profile for current authenticated role.
+
+    Use Case receives user role from auth token and return profile which depends on current user's role.
+    """
 
     def __init__(self, session: AsyncSession) -> None:
         self.session = session

@@ -17,7 +17,13 @@ class UserDTO(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class ProfileDTO(BaseModel):
+class UserProfileDTO(BaseModel):
+    id: UUID
+    username: str
+
+    first_name: str
+    last_name: str
+    second_name: str | None
     role: Role
 
     model_config = ConfigDict(from_attributes=True)

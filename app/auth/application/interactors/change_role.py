@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.expression import exists, select
 
 from app.auth.application.services.authentication import JWTService
-from app.auth.infrastructure.dependencies import AuthUserDTO
+from app.infrastructure.schemas.auth_user import AuthorizedUserDTO
 from app.user.application.enums.roles import Role
 from app.user.infrastructure.models.work_profile import WorkProfile
 
@@ -18,7 +18,7 @@ class UserChangeRoleInteractor:
         self.auth_service = auth_service
         self.session = session
 
-    async def execute(self, role: Role, idp: AuthUserDTO) -> None | str:
+    async def execute(self, role: Role, idp: AuthorizedUserDTO) -> None | str:
         if role == Role.EMPLOYEE:
             is_exist_query = select(exists().where(WorkProfile.user_id == idp.id))
             is_work_profile_exist = await self.session.scalar(is_exist_query)
