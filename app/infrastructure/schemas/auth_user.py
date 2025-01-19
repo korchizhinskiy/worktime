@@ -6,18 +6,14 @@ from pydantic.main import BaseModel
 from app.user.application.enums.roles import Role
 
 
-class UserDTO(BaseModel):
+class AuthorizedUserDTO(BaseModel):
     id: UUID
     username: str
 
     first_name: str
     last_name: str
     second_name: str | None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class ProfileDTO(BaseModel):
     role: Role
+    token: str
 
     model_config = ConfigDict(from_attributes=True)

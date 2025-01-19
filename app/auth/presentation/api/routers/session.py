@@ -6,7 +6,8 @@ from fastapi.routing import APIRouter
 
 from app.auth.application.interfaces.usecase.change_role import UserChangeRoleUseCase
 from app.auth.application.interfaces.usecase.logout import UserLogoutUseCase
-from app.auth.infrastructure.dependencies import AuthUserDTO, get_authenticated_user
+from app.auth.infrastructure.dependencies import get_authenticated_user
+from app.infrastructure.schemas.auth_user import AuthorizedUserDTO
 from app.user.application.enums.roles import Role
 
 router = APIRouter(tags=["Session"], prefix="/auth/session")
@@ -17,7 +18,7 @@ router = APIRouter(tags=["Session"], prefix="/auth/session")
 async def change_user_session_role(
     role: Role,
     interactor: FromDishka[UserChangeRoleUseCase],
-    idp: Annotated[AuthUserDTO, Depends(get_authenticated_user)],
+    idp: Annotated[AuthorizedUserDTO, Depends(get_authenticated_user)],
 ) -> None | str:
     return await interactor.execute(role, idp)
 
@@ -26,6 +27,6 @@ async def change_user_session_role(
 @inject
 async def logout_user_session(
     interactor: FromDishka[UserLogoutUseCase],
-    idp: Annotated[AuthUserDTO, Depends(get_authenticated_user)],
+    idp: Annotated[AuthorizedUserDTO, Depends(get_authenticated_user)],
 ) -> None | str:
     return await interactor.execute(idp)

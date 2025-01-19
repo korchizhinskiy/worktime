@@ -1,7 +1,7 @@
 from typing import Protocol
 
-from app.auth.infrastructure.dependencies import AuthUserDTO
+from app.infrastructure.schemas.auth_user import AuthorizedUserDTO
 
 
 class UserLogoutUseCase(Protocol):
-    async def execute(self, idp: AuthUserDTO) -> None: ...
+    async def execute(self, idp: AuthorizedUserDTO) -> None: ...
